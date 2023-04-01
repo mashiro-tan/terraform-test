@@ -15,9 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: "Setting a matrix for single environment"
-  #     if: ${{ github.event.inputs.tagName }}
-  #     - run: |
-  #       echo ::set-output name=matrix::${{ toJson({ include: [github.event.inputs.tagName]}} }}
+      if: ${{ github.event.inputs.tagName }}
+      - run: |
+        echo ::set-output name=matrix::${{ toJson({ include: [github.event.inputs.tagName]}} }}
 
   #   - name: "Setting a matrix for all environments"
   #     if: ${{ !github.event.inputs.tagName }}

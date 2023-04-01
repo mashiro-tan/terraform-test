@@ -27,9 +27,10 @@ jobs:
 
   show-the-matrix:
     runs-on: ubuntu-latest
+    need: make-matrix-list
     steps:
     - name: "show the output"
-      - run: |
+      run: |
         echo "${{ needs.make-matrix-list.outputs.matrix }}"
   # show-the-vars:
   #   runs-on: ubuntu-latest

@@ -13,32 +13,32 @@ jobs:
   make-matrix-list:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: "Setting a matrix for single environment"
-        if: ${{ github.event.inputs.tagName }}
-        - run: |
-            echo ::set-output name=matrix::${{ toJson({ include: [github.event.inputs.tagName]}} }}
+    - uses: actions/checkout@v3
+    - name: "Setting a matrix for single environment"
+      if: ${{ github.event.inputs.tagName }}
+      - run: |
+        echo ::set-output name=matrix::${{ toJson({ include: [github.event.inputs.tagName]}} }}
 
-      - name: "Setting a matrix for all environments"
-        if: ${{ !github.event.inputs.tagName }}
-        - run: |
-            JSON=$(cat ./somelist.json)
-            echo "::set-output name=matrix::${JSON//'%'/'%25'}"
+    - name: "Setting a matrix for all environments"
+      if: ${{ !github.event.inputs.tagName }}
+      - run: |
+        JSON=$(cat ./somelist.json)
+        echo "::set-output name=matrix::${JSON//'%'/'%25'}"
   show-the-matrix:
     runs-on: ubuntu-latest
     steps:
-      - name: "show the output"
-        - run: |
-            echo "${{ needs.make-matrix-list.outputs.matrix }}"
+    - name: "show the output"
+      - run: |
+        echo "${{ needs.make-matrix-list.outputs.matrix }}"
   show-the-vars:
     runs-on: ubuntu-latest
     need: 
-      - make-matrix-list
-      - show-the-matrix
+    - make-matrix-list
+    - show-the-matrix
     strategy:
       matrix: ${{fromJson(needs.make-matrix-list.outputs.matrix)}}
     steps:
-      - uses: actions/checkout@v3
-      - name: "check the variable"
-        - run: |
-            echo "${{ fromJson(steps.set_var.outputs.packageJson).version }}"
+    - uses: actions/checkout@v3
+    - name: "check the variable"
+      - run: |
+        echo "${{ fromJson(steps.set_var.outputs.packageJson).version }}"

@@ -19,17 +19,18 @@ jobs:
       run: |
         echo ::set-output name=matrix::{ \"include\": [ ${{ github.event.inputs.tagName }} ] }
 
-  #   - name: "Setting a matrix for all environments"
-  #     if: ${{ !github.event.inputs.tagName }}
-  #     - run: |
-  #       JSON=$(cat ./somelist.json)
-  #       echo "::set-output name=matrix::${JSON//'%'/'%25'}"
-  # show-the-matrix:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: "show the output"
-  #     - run: |
-  #       echo "${{ needs.make-matrix-list.outputs.matrix }}"
+    - name: "Setting a matrix for all environments"
+      if: ${{ !github.event.inputs.tagName }}
+      run: |
+        JSON=$(cat ./somelist.json)
+        echo "::set-output name=matrix::${JSON//'%'/'%25'}"
+
+  show-the-matrix:
+    runs-on: ubuntu-latest
+    steps:
+    - name: "show the output"
+      - run: |
+        echo "${{ needs.make-matrix-list.outputs.matrix }}"
   # show-the-vars:
   #   runs-on: ubuntu-latest
   #   need: 

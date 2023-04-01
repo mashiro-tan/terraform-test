@@ -17,13 +17,12 @@ jobs:
     - name: "Setting a matrix for single environment"
       if: ${{ github.event.inputs.tagName }}
       run: |
-        echo ::set-output name=matrix::{ \"include\": [ ${{ github.event.inputs.tagName }} ] }
+        echo "matrix={ \"include\": [ ${{ github.event.inputs.tagName }}" >> $GITHUB_OUTPUT
 
     - name: "Setting a matrix for all environments"
       if: ${{ !github.event.inputs.tagName }}
       run: |
-        JSON=$(cat ./somelist.json)
-        echo "::set-output name=matrix::${JSON//'%'/'%25'}"
+        echo matrix=$(cat ./somelist.json) >> $GITHUB_OUTPUT
 
   show-the-matrix:
     runs-on: ubuntu-latest

@@ -2,9 +2,9 @@
 
 name: Single target CI
 
-# Controls when the workflow will run
+
 on:
-  workflow_call:
+  [workflow_call, workflow_dispatch]
     inputs:
       tagName:
         description: 'Client tag name'

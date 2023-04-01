@@ -12,14 +12,19 @@ on:
 jobs:
   make-matrix-list:
     runs-on: ubuntu-latest
+    outputs:
+      single_target: ${{ steps.single.outputs.matrix }}
+      multi_target: ${{ steps.multi.outputs.matrix }}
     steps:
     - uses: actions/checkout@v3
-    - name: "Setting a matrix for single environment"
+    - id: single
+      name: "Setting a matrix for single environment"
       if: ${{ github.event.inputs.tagName }}
       run: |
         echo "matrix={ \"include\": [ ${{ github.event.inputs.tagName }}" >> $GITHUB_OUTPUT
 
-    - name: "Setting a matrix for all environments"
+    - id: multi
+      name: "Setting a matrix for all environments"
       if: ${{ !github.event.inputs.tagName }}
       run: |
         echo matrix=$(cat somelist.json) >> $GITHUB_OUTPUT

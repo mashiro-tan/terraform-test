@@ -13,20 +13,20 @@ jobs:
   make-matrix-list:
     runs-on: ubuntu-latest
     outputs:
-      include: ${{ steps.single.outputs.matrix || steps.multi.outputs.matrix }}
+      matrix: ${{ steps.single.outputs.matrix || steps.multi.outputs.matrix }}
     steps:
     - uses: actions/checkout@v3
     - id: single
       name: "Setting a matrix for single environment"
       if: ${{ github.event.inputs.tagName }}
       run: |
-        echo "matrix=[ \"${{ github.event.inputs.tagName }}\" ]" >> $GITHUB_OUTPUT
+        echo "matrix={ \"client_tag\": [ \"${{ github.event.inputs.tagName }}\" ] }" >> $GITHUB_OUTPUT
 
     - id: multi
       name: "Setting a matrix for all environments"
       if: ${{ !github.event.inputs.tagName }}
       run: |
-        echo matrix=$(cat somelist.json) >> $GITHUB_OUTPUT
+        echo matrix={ \"client_tag\": $(cat somelist.json) } >> $GITHUB_OUTPUT
 
   show-the-matrix:
     runs-on: ubuntu-latest

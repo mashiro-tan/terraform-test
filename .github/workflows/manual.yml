@@ -13,7 +13,7 @@ jobs:
   make-matrix-list:
     runs-on: ubuntu-latest
     outputs:
-      include: ${{ steps.single.outputs.matrix }} || ${{ steps.multi.outputs.matrix }}
+      include: ${{ steps.single.outputs.matrix || steps.multi.outputs.matrix }}
     steps:
     - uses: actions/checkout@v3
     - id: single

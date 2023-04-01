@@ -27,7 +27,7 @@ jobs:
 
   show-the-matrix:
     runs-on: ubuntu-latest
-    need: make-matrix-list
+    needs: make-matrix-list
     steps:
     - name: "show the output"
       run: |

@@ -22,7 +22,7 @@ jobs:
     - name: "Setting a matrix for all environments"
       if: ${{ !github.event.inputs.tagName }}
       run: |
-        echo matrix=$(cat ./somelist.json) >> $GITHUB_OUTPUT
+        echo matrix=$(cat somelist.json) >> $GITHUB_OUTPUT
 
   show-the-matrix:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
     steps:
     - name: "show the output"
       run: |
-        echo "${{ needs.make-matrix-list.outputs.matrix }}"
+        echo "${{ toJson(needs.make-matrix-list.outputs) }}"
   # show-the-vars:
   #   runs-on: ubuntu-latest
   #   need: 

@@ -1,33 +1,47 @@
+name: manual CI
+
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
-      tags:
-        description: 'Test scenario tags'
+      tagName:
+        description: 'Client tag name (for single target deployment)'
+        default: ''
         required: false
-        type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
+        type: string
 
 jobs:
-  log-the-inputs:
+  make-matrix-list:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
-          echo "Environment: $ENVIRONMENT"
-        env:
-          LEVEL: ${{ inputs.logLevel }}
-          TAGS: ${{ inputs.tags }}
-          ENVIRONMENT: ${{ inputs.environment }}
+      - uses: actions/checkout@v3
+
+      - name: "Setting a matrix for single environment"
+        if: ${{ github.event.inputs.tagName }}
+        - run: |
+            echo ::set-output name=matrix::${{ toJson({ include: [github.event.inputs.tagName]}} }}
+
+      - name: "Setting a matrix for all environments"
+        if: ${{ !github.event.inputs.tagName }}
+        - run: |
+            JSON=$(cat ./somelist.json)
+            echo "::set-output name=matrix::${JSON//'%'/'%25'}"
+
+  show-the-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "show the output"
+        - run: |
+            echo "${{ needs.make-matrix-list.outputs.matrix }}"
+
+  show-the-vars:
+    runs-on: ubuntu-latest
+    need: 
+      - make-matrix-list
+      - show-the-matrix
+    strategy:
+      matrix: ${{fromJson(needs.make-matrix-list.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v3
+      - name: "check the variable"
+        - run: |
+            echo "${{ fromJson(steps.set_var.outputs.packageJson).version }}"

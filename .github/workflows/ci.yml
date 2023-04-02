@@ -21,5 +21,11 @@ jobs:
 
       - name: read dev property
         run: echo "${{fromJson(steps.get_json.outputs.content).dev.var}}"
+
+      - name: Configuration existence check
+        if: ${{ !fromJson(steps.get_json.outputs.content)[inputs.tagname].var }}
+        script: |
+            core.setFailed('envA and envB are not equivalent!')
+
       - name: read current property
         run: echo "${{fromJson(steps.get_json.outputs.content)[inputs.tagname].var}}"

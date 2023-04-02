@@ -22,4 +22,4 @@ jobs:
       - name: read dev property
         run: echo "${{fromJson(steps.get_json.outputs.content).dev.var}}"
       - name: read current property
-        run: echo "${{fromJson(steps.get_json.outputs.content)[inputs.tagname]}}"
+        run: echo "${{fromJson(steps.get_json.outputs.content)[inputs.tagname].var}}"

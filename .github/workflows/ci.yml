@@ -24,8 +24,7 @@ jobs:
 
       - name: Configuration existence check
         if: ${{ !fromJson(steps.get_json.outputs.content)[inputs.tagname].var }}
-        with:
-          script: core.setFailed('Configuration not found')
+        run: echo "::error Configuration not found"
 
       - name: read current property
         run: echo "${{fromJson(steps.get_json.outputs.content)[inputs.tagname].var}}"

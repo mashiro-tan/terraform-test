@@ -1,0 +1,17 @@
+name: Single target CI
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+    inputs:
+      tagname:
+        description: "Client tag name (for single target deployment)"
+        required: true
+        type: string
+
+jobs:
+  call-ci-workflow:
+    uses: .github/workflows/ci.yml
+    with:
+      tag-name: ${{ inputs.tagname }}

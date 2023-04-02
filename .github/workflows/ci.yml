@@ -1,14 +1,12 @@
-# This is a basic workflow to help you get started with Actions
+name: Single target CI Workflow
 
-name: Single target CI
-
-
-on: [workflow_call, workflow_dispatch]
-  inputs:
-    tagName:
-      description: 'Client tag name'
-      required: true
-      type: string
+on:
+  workflow_call:
+    inputs:
+      tagname:
+        description: "Client tag name"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -21,5 +19,7 @@ jobs:
         name: read JSON
         run: echo content=$(cat somemap.json) >> $GITHUB_OUTPUT
 
-      - name: read property
+      - name: read dev property
         run: echo "${{fromJson(steps.get_json.outputs.content).dev.var}}"
+      - name: read current property
+        run: echo "${{fromJson(steps.get_json.outputs.content)[inputs.tagname]}}"

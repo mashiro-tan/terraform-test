@@ -23,9 +23,11 @@ jobs:
         with:
           script: core.setFailed('Configuration not valid or empty')
   call-ci-workflow:
+    needs:
+      - collect-target-tags
     strategy:
       matrix:
-        tagname: ${{ fromJson(needs.collect-target-tags.outputs.matrix) }}
+        tagname: ${{ needs.collect-target-tags.outputs.matrix }}
     uses: ./.github/workflows/ci.yml
     with:
       tagname: ${{ matrix.tagname }}

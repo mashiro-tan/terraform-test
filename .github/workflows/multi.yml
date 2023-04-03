@@ -1,0 +1,31 @@
+name: Mutli target CI
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  collect-target-tags:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.get_json.outputs.content }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: get_json
+        name: Read and format JSON
+        run: echo content=$(cat somelist.json | jq . -c) >> $GITHUB_OUTPUT
+
+      - name: Simple configuration validation
+        uses: actions/github-script@v3
+        if: ${{ !fromJson(steps.get_json.outputs.content) || !startsWith(steps.get_json.outputs.content, '["') || steps.get_json.outputs.content == '[]' }}
+        with:
+          script: core.setFailed('Configuration not valid or empty')
+  call-ci-workflow:
+    strategy:
+      matrix:
+        tagname: ${{ fromJson(outputs.collect-target-tags.matrix) }}
+    uses: ./.github/workflows/ci.yml
+    with:
+      tagname: ${{ matrix.tagname }}

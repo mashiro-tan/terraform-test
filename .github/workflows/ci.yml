@@ -19,9 +19,6 @@ jobs:
         name: read JSON
         run: echo content=$(cat somemap.json) >> $GITHUB_OUTPUT
 
-      - name: read dev property
-        run: echo "${{fromJson(steps.get_json.outputs.content).dev.var}}"
-
       - name: Configuration existence check
         uses: actions/github-script@v3
         if: ${{ !fromJson(steps.get_json.outputs.content)[inputs.tagname].var }}

@@ -27,7 +27,7 @@ jobs:
       - collect-target-tags
     strategy:
       matrix:
-        tagname: ${{ needs.collect-target-tags.outputs.matrix }}
+        tagname: ${{ fromJson(needs.collect-target-tags.outputs.matrix) }}
     uses: ./.github/workflows/ci.yml
     with:
       tagname: ${{ matrix.tagname }}

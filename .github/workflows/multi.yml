@@ -1,4 +1,4 @@
-name: Mutli target CI
+name: Multi target CI
 
 on:
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
   call-ci-workflow:
     strategy:
       matrix:
-        tagname: ${{ fromJson(outputs.collect-target-tags.matrix) }}
+        tagname: ${{ fromJson(needs.collect-target-tags.outputs.matrix) }}
     uses: ./.github/workflows/ci.yml
     with:
       tagname: ${{ matrix.tagname }}
